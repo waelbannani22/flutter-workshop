@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gstore4sim1/my_games/my_games.dart';
 import 'package:gstore4sim1/signin.dart';
 
+import 'forgetpassword.dart';
 import 'signup.dart';
 import 'product_details.dart';
 import 'home/home.dart';
@@ -17,10 +18,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'G-Store ESPRIT',
-      home: Signup(),
+     // home: Signup(),
       //home: Home(),
       //home: MyGames(),
-      //home: Signin(),
+     // home: Signin(),
+      home:ForgetPassword(),
       // home: ProductDetails(
       //     image: "assets/images/dmc5.jpg",
       //     title: "Devil May Cry 5",
