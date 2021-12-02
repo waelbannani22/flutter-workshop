@@ -10,9 +10,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<GameData> games = [];
+  final List<GameData> _games = [];
 
-  final description =
+  final String _description =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
       "sed do eiusmod tempor incididunt ut "
       "labore et dolore magna aliqua. Ut enim ad minim veniam, "
@@ -20,48 +20,45 @@ class _HomeState extends State<Home> {
       "aliquip ex ea commodo consequat. Duis aute irure dolor "
       "in reprehenderit in voluptate velit esse cillum dolore "
       "eu fugiat nulla pariatur. Excepteur sint occaecat "
-      "cupidatat non proident, sunt in culpa qui officia "
-      "deserunt mollit anim id est laborum.";
+      "cupidatat non proident, sunt in culpa qui officia ";
 
   @override
   void initState() {
-    // TODO: implement initState
-
-    games.add(GameData(
-        image: "assets/images/dmc5.jpg",
+    _games.add(GameData(
         title: "Devil May Cry 5",
+        image: "assets/images/dmc5.jpg",
+        description: _description,
         price: 200,
-        description: description,
         quantity: 3000));
-    games.add(GameData(
-        image: "assets/images/re8.jpg",
+    _games.add(GameData(
         title: "Resident Evil VIII",
+        image: "assets/images/re8.jpg",
+        description: _description,
         price: 200,
-        description: description,
         quantity: 3000));
-    games.add(GameData(
-        image: "assets/images/nfs.jpg",
+    _games.add(GameData(
         title: "Need For Speed Heat",
+        image: "assets/images/nfs.jpg",
+        description: _description,
         price: 100,
-        description: description,
         quantity: 3000));
-    games.add(GameData(
-        image: "assets/images/rdr2.jpg",
+    _games.add(GameData(
         title: "Red Dead Redemption II",
+        image: "assets/images/rdr2.jpg",
+        description: _description,
         price: 150,
-        description: description,
         quantity: 3000));
-    games.add(GameData(
-        image: "assets/images/fifa.jpg",
+    _games.add(GameData(
         title: "FIFA 22",
-        price: 200,
-        description: description,
-        quantity: 3000));
-    games.add(GameData(
-        image: "assets/images/minecraft.jpg",
-        title: "Minecraft",
+        image: "assets/images/fifa.jpg",
+        description: _description,
         price: 100,
-        description: description,
+        quantity: 3000));
+    _games.add(GameData(
+        title: "Minecraft",
+        image: "assets/images/minecraft.jpg",
+        description: _description,
+        price: 200,
         quantity: 3000));
     super.initState();
   }
@@ -69,39 +66,39 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("G-Store ESPRIT"),
-      ),
-      body: ListView.builder(
-          itemCount: games.length,
-          itemBuilder: (context, index) {
+        appBar: AppBar(
+          title: const Text("G-Store ESPRIT"),
+        ),
+        body: ListView.builder(
+          itemCount: _games.length,
+          itemBuilder: (BuildContext context, int index) {
             return ProductInfo(
-                image: games[index].image,
-                title: games[index].title,
-                price: games[index].price,
-                description: games[index].description,
-                quantity: games[index].quantity);
-          }),
-    );
+                _games[index].image,
+                _games[index].title,
+                _games[index].description,
+                _games[index].price,
+                _games[index].quantity);
+          },
+        ));
   }
 }
 
 class GameData {
-  final String image;
   final String title;
-  final int price;
+  final String image;
   final String description;
+  final int price;
   final int quantity;
   GameData({
-    required this.image,
     required this.title,
-    required this.price,
+    required this.image,
     required this.description,
+    required this.price,
     required this.quantity,
   });
 
   @override
   String toString() {
-    return 'GameData(image: $image, title: $title, price: $price, description: $description, quantity: $quantity)';
+    return 'GameData{title: $title, image: $image, description: $description, price: $price, quantity: $quantity}';
   }
 }

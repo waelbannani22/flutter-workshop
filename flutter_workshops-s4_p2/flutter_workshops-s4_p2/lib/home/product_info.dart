@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ProductInfo extends StatelessWidget {
-  final String image;
-  final String title;
-  final int price;
-  final String description;
-  final int quantity;
+  final String _image;
+  final String _title;
+  final String _description;
+  final int _price;
+  final int _quantity;
 
-  const ProductInfo({
-    Key? key,
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.description,
-    required this.quantity,
-  }) : super(key: key);
+  const ProductInfo(
+      this._image, this._title, this._description, this._price, this._quantity);
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +17,17 @@ class ProductInfo extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.fromLTRB(10, 10, 20, 10),
-            child: Image.asset(image, width: 200, height: 94),
+            child: Image.asset(_image, width: 200, height: 94),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title),
+              Text(_title),
               const SizedBox(
                 height: 10,
               ),
-              Text(price.toString() + " TND", textScaleFactor: 2),
+              Text(_price.toString() + " TND", textScaleFactor: 2)
             ],
           )
         ],
