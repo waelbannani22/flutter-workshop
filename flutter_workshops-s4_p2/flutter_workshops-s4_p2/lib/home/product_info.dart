@@ -1,36 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:gstore4sim1/product_details.dart';
+import 'package:gstore4sim1/signup.dart';
 
 class ProductInfo extends StatelessWidget {
-  final String _image;
-  final String _title;
-  final String _description;
-  final int _price;
-  final int _quantity;
-
-  const ProductInfo(
-      this._image, this._title, this._description, this._price, this._quantity);
+  final String image;
+  final String title;
+  final String description;
+  final int price;
+  final int quantity;
+  const ProductInfo({
+    Key? key,
+    required this.image,
+    required this.title,
+    required this.description,
+    required this.price,
+    required this.quantity,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 10, 20, 10),
-            child: Image.asset(_image, width: 200, height: 94),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_title),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(_price.toString() + " TND", textScaleFactor: 2)
-            ],
-          )
-        ],
+      child: InkWell(
+        onTap: () {
+          // print("test");
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ProductDetails(image, title, description, price, quantity);
+          }));
+        },
+        child: Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+              child: Image.network("http://localhost:9090/img/" + image,
+                  width: 200, height: 94),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(price.toString() + " TND", textScaleFactor: 2)
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

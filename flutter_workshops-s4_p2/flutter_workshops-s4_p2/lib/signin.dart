@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gstore4sim1/reset_password.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Signin extends StatefulWidget {
   const Signin({Key? key}) : super(key: key);
@@ -9,9 +12,12 @@ class Signin extends StatefulWidget {
 
 class _SigninState extends State<Signin> {
   late String? username;
-  
   late String? password;
-   final keyForm = GlobalKey<FormState>();
+
+  final String baseUrl = "localhost:9090";
+
+  final GlobalKey<FormState> _keyForm = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +25,7 @@ class _SigninState extends State<Signin> {
         title: const Text("S'authentifier"),
       ),
       body: Form(
-        key: keyForm,
+        key: _keyForm,
         child: ListView(
           children: [
             Container(
@@ -32,31 +38,38 @@ class _SigninState extends State<Signin> {
               child: TextFormField(
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: "Username"),
-                 onSaved: (String? value) {
+                onSaved: (String? value) {
                   username = value;
                 },
-                validator: (value) {
-                  if (value!.isEmpty || value.length < 5) {
-                    return "Username ne  doit pas etre vide";
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Le username ne doit pas etre vide";
+                  } else if (value.length < 5) {
+                    return "Le username doit avoir au moins 5 caractères";
+                  } else {
+                    return null;
                   }
                 },
-                    
               ),
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-              child: TextFormField (
+              child: TextFormField(
+                obscureText: true,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: "Mot de passe"),
-                                        onSaved: (String? value) {
-                      password = value;
-                    },
-                    validator: (value) {
-                      if (value!.isEmpty || value.length < 5) {
-                        return "Password doit contenir au moins 5 caracteres ";
-                      
-                    }}
-                    
+                onSaved: (String? value) {
+                  password = value;
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Le mot de passe ne doit pas etre vide";
+                  } else if (value.length < 5) {
+                    return "Le mot de passe doit avoir au moins 5 caractères";
+                  } else {
+                    return null;
+                  }
+                },
               ),
             ),
             Container(
@@ -64,23 +77,42 @@ class _SigninState extends State<Signin> {
                 child: ElevatedButton(
                   child: const Text("S'authentifier"),
                   onPressed: () {
-                                        if (keyForm.currentState!.validate()) {
-                      keyForm.currentState!.save();
-                      String message = "username + " +
-                          username! +
-                          
-                          "\n password : " +
-                          password! ;
-                         
-                        
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Informations"),
-                              content: Text(message),
-                            );
-                          });
+                    if (_keyForm.currentState!.validate()) {
+                      _keyForm.currentState!.save();
+                      Map<String, String> headers = {
+                        "Content-Type": "application/json; charset=utf-8"
+                      };
+                      Map<String, dynamic> body = {
+                        "username": username!,
+                        "password": password!
+                      };
+                      http
+                          .post(Uri.http(baseUrl, "/user/signin"),
+                              headers: headers, body: json.encode(body))
+                          .then((response) {
+                        if (response.statusCode == 200) {
+                          Navigator.pushReplacementNamed(context, "/home");
+                        } else if (response.statusCode == 401) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Text("Informations"),
+                                  content: Text(
+                                      "Username et/ou mot de passe invalides"),
+                                );
+                              });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Text("Informations"),
+                                  content: Text("Erreur"),
+                                );
+                              });
+                        }
+                      });
                     }
                   },
                 )),
@@ -88,21 +120,32 @@ class _SigninState extends State<Signin> {
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red),
                   ),
                   child: const Text("Créer un compte"),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, "/signup");
+                  },
                 )),
             Container(
               margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text("Mot de passe oublié ?"),
-                  SizedBox(
+                children: [
+                  const Text("Mot de passe oublié ?"),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text("Cliquez ici", style: TextStyle(color: Colors.blue))
+                  GestureDetector(
+                    child: const Text(
+                      "Cliquez ici",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, "/resetPwd");
+                    },
+                  )
                 ],
               ),
             )

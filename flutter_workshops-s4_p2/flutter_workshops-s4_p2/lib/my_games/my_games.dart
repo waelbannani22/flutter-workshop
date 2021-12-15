@@ -48,20 +48,16 @@ class _MyGamesState extends State<MyGames> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("Ma bibliothèque"),
-        ), //MyGameInfo("assets/images/dmc5.jpg", "Devil May Cry 5")
-        body: GridView.builder(
-          itemCount: _games.length,
-          itemBuilder: (BuildContext context, int index) {
-            return MyGameInfo(_games[index].image, _games[index].title);
-          },
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisExtent: 120,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 5),
-        ));
+    return GridView.builder(
+      itemCount: _games.length,
+      itemBuilder: (BuildContext context, int index) {
+        return MyGameInfo(_games[index].image, _games[index].title);
+      },
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisExtent: 120,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5),
+    );
   }
 }

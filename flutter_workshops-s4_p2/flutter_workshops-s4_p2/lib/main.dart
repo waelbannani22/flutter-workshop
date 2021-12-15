@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gstore4sim1/navigation/nav_bottom.dart';
+import 'package:gstore4sim1/navigation/nav_tab.dart';
 
 import 'basket/basket.dart';
 import 'my_games/my_games.dart';
@@ -18,15 +20,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'G-Store ESPRIT',
+      routes: {
+        "/": (context) {
+          return const Signin();
+        },
+        "/resetPwd": (context) {
+          return const ResetPassword();
+        },
+        "/home": (context) {
+          return const NavigationBottom();
+        },
+        "/home/myGames": (context) {
+          return const MyGames();
+        },
+        "/home/basket": (context) {
+          return const Basket();
+        },
+        "/signup": (context) {
+          return const Signup();
+        },
+        "/home/updateUser": (context) {
+          return const UpdateUser();
+        },
+        "/home/navTab": (context) {
+          return const NavigationTab();
+        }
+      },
       //home: Home(),
       // home: MyGames(),
       //home: Basket(),
       // home: Signin(),
-      // home: Signup(),
+      //home: Signup(),
       // home: ResetPassword(),
-      //home: UpdateUser(),
+      // home: UpdateUser(),
       // home: ProductDetails("assets/images/dmc5.jpg", "Devil May Cry 5",
       //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
       //         "sed do eiusmod tempor incididunt ut "

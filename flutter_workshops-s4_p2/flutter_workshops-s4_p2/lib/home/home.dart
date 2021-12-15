@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'product_info.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,75 +13,54 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final List<GameData> _games = [];
+  final String baseUrl = "localhost:9090";
 
-  final String _description =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-      "sed do eiusmod tempor incididunt ut "
-      "labore et dolore magna aliqua. Ut enim ad minim veniam, "
-      "quis nostrud exercitation ullamco laboris nisi ut "
-      "aliquip ex ea commodo consequat. Duis aute irure dolor "
-      "in reprehenderit in voluptate velit esse cillum dolore "
-      "eu fugiat nulla pariatur. Excepteur sint occaecat "
-      "cupidatat non proident, sunt in culpa qui officia ";
+  late Future<bool> fetchedGames;
+
+  Future<bool> fetchgames() async {
+    http.Response response = await http.get(Uri.http(baseUrl, "/game"));
+    List<dynamic> gamesfromServer = json.decode(response.body);
+    for (int i = 0; i < gamesfromServer.length; i++) {
+      _games.add(GameData(
+          title: gamesfromServer[i]["title"],
+          image: gamesfromServer[i]["image"],
+          description: gamesfromServer[i]["description"],
+          price: int.parse(gamesfromServer[i]["price"].toString()),
+          quantity: int.parse(gamesfromServer[i]["quantity"].toString())));
+    }
+
+    return true;
+  }
 
   @override
   void initState() {
-    _games.add(GameData(
-        title: "Devil May Cry 5",
-        image: "assets/images/dmc5.jpg",
-        description: _description,
-        price: 200,
-        quantity: 3000));
-    _games.add(GameData(
-        title: "Resident Evil VIII",
-        image: "assets/images/re8.jpg",
-        description: _description,
-        price: 200,
-        quantity: 3000));
-    _games.add(GameData(
-        title: "Need For Speed Heat",
-        image: "assets/images/nfs.jpg",
-        description: _description,
-        price: 100,
-        quantity: 3000));
-    _games.add(GameData(
-        title: "Red Dead Redemption II",
-        image: "assets/images/rdr2.jpg",
-        description: _description,
-        price: 150,
-        quantity: 3000));
-    _games.add(GameData(
-        title: "FIFA 22",
-        image: "assets/images/fifa.jpg",
-        description: _description,
-        price: 100,
-        quantity: 3000));
-    _games.add(GameData(
-        title: "Minecraft",
-        image: "assets/images/minecraft.jpg",
-        description: _description,
-        price: 200,
-        quantity: 3000));
+    fetchedGames = fetchgames();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("G-Store ESPRIT"),
-        ),
-        body: ListView.builder(
-          itemCount: _games.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ProductInfo(
-                _games[index].image,
-                _games[index].title,
-                _games[index].description,
-                _games[index].price,
-                _games[index].quantity);
-          },
-        ));
+    return FutureBuilder(
+        future: fetchedGames,
+        builder: (BuildContext builder, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: _games.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ProductInfo(
+                    image: _games[index].image,
+                    title: _games[index].title,
+                    description: _games[index].description,
+                    price: _games[index].price,
+                    quantity: _games[index].quantity);
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }
 
